@@ -16,6 +16,7 @@ import time
 from smart_home.WeatherStation import WeatherStationData, DeviceList
 from smart_home.Camera import CameraData
 from smart_home.Thermostat import ThermostatData
+from smart_home.HomeCoach import HomeCoachData
 from smart_home import _BASE_URL, postRequest, NoDevice
 
 ######################## USER SPECIFIC INFORMATION ######################
@@ -52,6 +53,7 @@ class ClientAuth:
             write_thermostat: to set up the thermostat (Syncschedule, Setthermpoint)
             read_presence: to retrieve Presence data (Gethomedata, Getcamerapicture)
             access_presence: to access the live stream, any video stored on the SD card and to retrieve Presence's lightflood status
+            read_homecoach: to access the Healthy Home Coach data
             Several value can be used at the same time, ie: 'read_station read_camera'
     """
 
@@ -119,7 +121,7 @@ if __name__ == "__main__":
            stderr.write("Library source missing identification arguments to check lnetatmo.py (user/password/etc...)")
            exit(1)
 
-    authorization = ClientAuth(scope="read_station read_camera access_camera read_thermostat write_thermostat read_presence access_presence")  # Test authentication method
+    authorization = ClientAuth(scope="read_station read_camera access_camera read_thermostat write_thermostat read_presence access_presence read_homecoach")  # Test authentication method
 
     try:
         devList = DeviceList(authorization)         # Test DEVICELIST
@@ -135,6 +137,15 @@ if __name__ == "__main__":
     except NoDevice :
         if stdout.isatty():
             print("lnetatmo.py : warning, no camera available for testing")
+
+    try:
+        HomeCoach = HomeCoachData(authorization)
+        print(HomeCoach)
+    except NoDevice :
+        if stdout.isatty():
+            print("lnetatmo.py : warning, no camera available for testing")
+
+
 
     try:
         Thermostat = ThermostatData(authorization)
